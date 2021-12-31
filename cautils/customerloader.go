@@ -26,6 +26,7 @@ func ConfigFileFullPath() string { return getter.GetDefaultPath(configFileName +
 // ======================================================================================
 
 type RegistryConfig struct {
+	RegistryName string `json:"registryName"`
 	RegistryURL string            `json:"registryURL"`
 	Credentials map[string]string `json:"credentials"`
 }
@@ -67,6 +68,7 @@ type ITenantConfig interface {
 	SetTenant() error
 	SetRegistryURL(string) error
 	SetRegistryCredentials(map[string]string) error
+	SetRegistryName(string) error
 
 	// getters
 	GetClusterName() string
@@ -139,6 +141,16 @@ func (lc *LocalConfig) SetRegistryURL(url string) error {
 	return nil
 }
 
+func (lc *LocalConfig) SetRegistryName(name string) error {
+
+	err := SetRegistryName(lc.configObj, name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (lc *LocalConfig) SetRegistryCredentials(credentials map[string]string) error {
 	err := SetRegistryCredentials(lc.configObj, credentials)
 	if err != nil {
@@ -190,6 +202,16 @@ func (c *ClusterConfig) SetRegistryURL(url string) error {
 
 func (c *ClusterConfig) SetRegistryCredentials(credentials map[string]string) error {
 	err := SetRegistryCredentials(c.configObj, credentials)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *ClusterConfig) SetRegistryName(name string) error {
+
+	err := SetRegistryName(c.configObj, name)
 	if err != nil {
 		return err
 	}
@@ -497,6 +519,15 @@ func SetRegistryCredentials(c *ConfigObj, credentials map[string]string) error {
 
 func SetRegistryURL(c *ConfigObj, url string) error {
 	c.RegistryConfig.RegistryURL = url
+	err := updateConfigFile(c)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func SetRegistryName(c *ConfigObj, name string) error {
+	c.RegistryConfig.RegistryName = name
 	err := updateConfigFile(c)
 	if err != nil {
 		return err
