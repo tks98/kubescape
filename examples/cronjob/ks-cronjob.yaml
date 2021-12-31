@@ -23,9 +23,9 @@ metadata:
   name: kubescape-discovery-role
   namespace: kubescape
 rules:
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["get", "list", "describe"]
+  - apiGroups: [ "*" ]
+    resources: [ "*" ]
+    verbs: [ "get", "list", "describe" ]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -38,8 +38,8 @@ roleRef:
   kind: Role
   name: kubescape-discovery-role
 subjects:
-- kind: ServiceAccount
-  name: kubescape-discovery
+  - kind: ServiceAccount
+    name: kubescape-discovery
 
 ---
 # ------------------- Kubescape Cluster Role & Cluster Role Binding ------------------- #
@@ -49,9 +49,9 @@ metadata:
   name: kubescape-discovery-clusterroles
   # "namespace" omitted since ClusterRoles are not namespaced
 rules:
-- apiGroups: ["*"]
-  resources: ["*"]
-  verbs: ["get", "list", "describe"]
+  - apiGroups: [ "*" ]
+    resources: [ "*" ]
+    verbs: [ "get", "list", "describe" ]
 
 ---
 kind: ClusterRoleBinding
@@ -63,16 +63,16 @@ roleRef:
   kind: ClusterRole
   name: kubescape-discovery-clusterroles
 subjects:
-- kind: ServiceAccount
-  name: kubescape-discovery
-  namespace: kubescape
+  - kind: ServiceAccount
+    name: kubescape-discovery
+    namespace: kubescape
 
 ---
 # ------------------- Kubescape User/Customer GUID ------------------- #
-kind: ConfigMap 
-apiVersion: v1 
+kind: ConfigMap
+apiVersion: v1
 metadata:
-  name: kubescape-configmap 
+  name: kubescape-configmap
   labels:
     app: kubescape
   namespace: kubescape
@@ -108,22 +108,22 @@ spec:
       template:
         spec:
           containers:
-          - name: kubescape
-            image: quay.io/armosec/kubescape:latest
-            imagePullPolicy: IfNotPresent
-            command: ["/bin/sh","-c"]
-            args: 
-            - kubescape scan framework nsa --submit
-            volumeMounts:
-            - name: kubescape-config-volume
-              mountPath: /root/.kubescape/config.json
-              subPath: config.json
+            - name: kubescape
+              image: quay.io/armosec/kubescape:latest
+              imagePullPolicy: IfNotPresent
+              command: [ "/bin/sh","-c" ]
+              args:
+                - kubescape scan framework nsa --submit
+              volumeMounts:
+                - name: kubescape-config-volume
+                  mountPath: /root/.kubescape/config.json
+                  subPath: config.json
           restartPolicy: OnFailure
           serviceAccountName: kubescape-discovery
           volumes:
-          - name: kubescape-config-volume
-            configMap:
-              name: kubescape-configmap
+            - name: kubescape-config-volume
+              configMap:
+                name: kubescape-configmap
 
 ---
 

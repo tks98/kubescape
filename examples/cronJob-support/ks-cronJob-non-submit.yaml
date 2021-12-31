@@ -22,11 +22,11 @@ spec:
       template:
         spec:
           containers:
-          - name: kubescape
-            image: quay.io/armosec/kubescape:latest
-            imagePullPolicy: IfNotPresent
-            command: ["/bin/sh","-c"]
-            args: 
-            - kubescape scan framework nsa
+            - name: kubescape
+              image: quay.io/armosec/kubescape:latest
+              imagePullPolicy: IfNotPresent
+              command: [ "/bin/sh","-c" ]
+              args:
+                - kubescape scan framework nsa
           restartPolicy: OnFailure
           serviceAccountName: kubescape-discovery

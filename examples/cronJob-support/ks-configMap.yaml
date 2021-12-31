@@ -1,8 +1,8 @@
 # ------------------- Kubescape User/Customer ID ------------------- #
-kind: ConfigMap 
-apiVersion: v1 
+kind: ConfigMap
+apiVersion: v1
 metadata:
-  name: kubescape 
+  name: kubescape
   labels:
     app: kubescape
   namespace: kubescape

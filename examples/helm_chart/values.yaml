@@ -23,7 +23,7 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
 
-imagePullSecrets: []
+imagePullSecrets: [ ]
 nameOverride: ""
 fullnameOverride: ""
 
@@ -32,7 +32,7 @@ serviceAccount:
   # Specifies whether a service account should be created
   create: true
   # Annotations to add to the service account
-  annotations: {}
+  annotations: { }
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: "kubescape-discovery"
@@ -44,18 +44,18 @@ configMap:
     customerGUID: <MyGUID>
     clusterName: <MyK8sClusterName>
 
-podAnnotations: {}
+podAnnotations: { }
 
-podSecurityContext: {}
-  # fsGroup: 2000
+podSecurityContext: { }
+# fsGroup: 2000
 
-securityContext: {}
+securityContext: { }
   # capabilities:
   #   drop:
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-  # runAsUser: 1000
+# runAsUser: 1000
 
 # -- Default resources for running the service in cluster
 resources:
@@ -67,8 +67,8 @@ resources:
     memory: 256Mi
 
 
-nodeSelector: {}
+nodeSelector: { }
 
-tolerations: []
+tolerations: [ ]
 
-affinity: {}
+affinity: { }

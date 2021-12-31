@@ -1,7 +1,10 @@
 package harbor
 
 import (
+	"context"
+	"fmt"
 	gc "github.com/goharbor/go-client/pkg/harbor"
+	"github.com/goharbor/go-client/pkg/sdk/v2.0/client/health"
 	"net/url"
 )
 
@@ -40,5 +43,39 @@ func NewHarborRegistry(rawURL, username, password string, insecure bool) (*harbo
 	hr.client = harborClient
 
 	return &hr, nil
+
+}
+
+// Login verifies the user supplied a valid registry and login credentials and stores those in the local config
+func (h harborRegistry) Login(registry string, credentials map[string]string, insecure bool) error {
+
+	if _, ok := credentials["username"]; !ok {
+		return fmt.Errorf("you need to supply a username to login to the registry")
+	}
+
+	if _, ok := credentials["password"]; !ok {
+		return fmt.Errorf("you need to supply a password to login to the registry")
+	}
+
+	c := &gc.ClientSetConfig{
+		URL:      registry,
+		Insecure: insecure,
+		Username: credentials["username"],
+		Password: credentials["password"],
+	}
+
+	harborClient, err := gc.NewClientSet(c)
+	if err != nil {
+		return err
+	}
+
+	_, err = harborClient.V2().Health.GetHealth(context.Background(), &health.GetHealthParams{})
+	if err != nil {
+		return err
+	}
+
+	h.client = harborClient
+
+	return nil
 
 }

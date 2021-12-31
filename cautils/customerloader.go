@@ -25,11 +25,17 @@ func ConfigFileFullPath() string { return getter.GetDefaultPath(configFileName +
 // =============================== Config structure =====================================
 // ======================================================================================
 
+type RegistryConfig struct {
+	RegistryURL string            `json:"registryURL"`
+	Credentials map[string]string `json:"credentials"`
+}
+
 type ConfigObj struct {
-	CustomerGUID       string `json:"customerGUID"`
-	Token              string `json:"invitationParam"`
-	CustomerAdminEMail string `json:"adminMail"`
-	ClusterName        string `json:"clusterName"`
+	CustomerGUID       string         `json:"customerGUID"`
+	Token              string         `json:"invitationParam"`
+	CustomerAdminEMail string         `json:"adminMail"`
+	ClusterName        string         `json:"clusterName"`
+	RegistryConfig     RegistryConfig `json:"registryConfig"`
 }
 
 func (co *ConfigObj) Json() []byte {
@@ -59,6 +65,8 @@ func (co *ConfigObj) Config() []byte {
 type ITenantConfig interface {
 	// set
 	SetTenant() error
+	SetRegistryURL(string) error
+	SetRegistryCredentials(map[string]string) error
 
 	// getters
 	GetClusterName() string
@@ -121,6 +129,25 @@ func (lc *LocalConfig) SetTenant() error {
 
 }
 
+func (lc *LocalConfig) SetRegistryURL(url string) error {
+
+	err := SetRegistryURL(lc.configObj, url)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (lc *LocalConfig) SetRegistryCredentials(credentials map[string]string) error {
+	err := SetRegistryCredentials(lc.configObj, credentials)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func getTenantConfigFromBE(backendAPI getter.IBackend, configObj *ConfigObj) error {
 
 	// get from armoBE
@@ -150,6 +177,24 @@ type ClusterConfig struct {
 	defaultNS  string
 	backendAPI getter.IBackend
 	configObj  *ConfigObj
+}
+
+func (c *ClusterConfig) SetRegistryURL(url string) error {
+	err := SetRegistryURL(c.configObj, url)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *ClusterConfig) SetRegistryCredentials(credentials map[string]string) error {
+	err := SetRegistryCredentials(c.configObj, credentials)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewClusterConfig(k8s *k8sinterface.KubernetesApi, backendAPI getter.IBackend, customerGUID string) *ClusterConfig {
@@ -373,6 +418,7 @@ func (c *ClusterConfig) updateConfigData(configMap *corev1.ConfigMap) {
 		}
 	}
 }
+
 func loadConfigFromFile() (*ConfigObj, error) {
 	dat, err := os.ReadFile(ConfigFileFullPath())
 	if err != nil {
@@ -429,4 +475,31 @@ func DeleteConfigFile() error {
 
 func AdoptClusterName(clusterName string) string {
 	return strings.ReplaceAll(clusterName, "/", "-")
+}
+
+func SetRegistryCredentials(c *ConfigObj, credentials map[string]string) error {
+	if _, ok := credentials["username"]; !ok {
+		return fmt.Errorf("you need to supply a username to login to the registry")
+	}
+
+	if _, ok := credentials["password"]; !ok {
+		return fmt.Errorf("you need to supply a password to login to the registry")
+	}
+
+	c.RegistryConfig.Credentials = credentials
+	err := updateConfigFile(c)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SetRegistryURL(c *ConfigObj, url string) error {
+	c.RegistryConfig.RegistryURL = url
+	err := updateConfigFile(c)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,40 +1,40 @@
 [
-    {
-        "name": "ignore-kube-namespaces",
-        "policyType": "postureExceptionPolicy",
-        "actions": [
-            "alertOnly"
-        ],
-        "resources": [
-            {
-                "designatorType": "Attributes",
-                "attributes": {
-                    "namespace": "kube-system"
-                }
-            },
-            {
-                "designatorType": "Attributes",
-                "attributes": {
-                    "namespace": "kube-public"
-                }
-            },
-            {
-                "designatorType": "Attributes",
-                "attributes": {
-                    "namespace": "kube-node-lease"
-                }
-            }
-        ],
-        "posturePolicies": [
-            {
-                "frameworkName": "NSA"
-            },
-            {
-                "frameworkName": "MITRE"
-            },
-            {
-                "frameworkName": "ArmoBest"
-            }
-        ]
-    }
+  {
+    "name": "ignore-kube-namespaces",
+    "policyType": "postureExceptionPolicy",
+    "actions": [
+      "alertOnly"
+    ],
+    "resources": [
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "namespace": "kube-system"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "namespace": "kube-public"
+        }
+      },
+      {
+        "designatorType": "Attributes",
+        "attributes": {
+          "namespace": "kube-node-lease"
+        }
+      }
+    ],
+    "posturePolicies": [
+      {
+        "frameworkName": "NSA"
+      },
+      {
+        "frameworkName": "MITRE"
+      },
+      {
+        "frameworkName": "ArmoBest"
+      }
+    ]
+  }
 ]
