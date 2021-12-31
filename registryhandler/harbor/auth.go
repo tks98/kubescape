@@ -16,7 +16,7 @@ type harborRegistry struct {
 }
 
 // NewHarborRegistry returns a pointer to the harborRegistry type which can be used to perform actions on the registry
-func NewHarborRegistry(rawURL, username, password string, insecure bool) (*harborRegistry, error) {
+func NewHarborRegistry(rawURL, username, password string) (*harborRegistry, error) {
 
 	registryURL, err := url.Parse(rawURL)
 	if err != nil {
@@ -25,7 +25,6 @@ func NewHarborRegistry(rawURL, username, password string, insecure bool) (*harbo
 
 	c := &gc.ClientSetConfig{
 		URL:      registryURL.String(),
-		Insecure: insecure,
 		Username: username,
 		Password: password,
 	}

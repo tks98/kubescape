@@ -71,6 +71,7 @@ type ITenantConfig interface {
 	SetRegistryName(string) error
 
 	// getters
+	GetRegistryConfig() RegistryConfig
 	GetClusterName() string
 	GetCustomerGUID() string
 	GetConfigObj() *ConfigObj
@@ -117,6 +118,7 @@ func NewLocalConfig(backendAPI getter.IBackend, customerGUID string) *LocalConfi
 	return lc
 }
 
+func (lc *LocalConfig) GetRegistryConfig() RegistryConfig { return lc.configObj.RegistryConfig }
 func (lc *LocalConfig) GetConfigObj() *ConfigObj { return lc.configObj }
 func (lc *LocalConfig) GetCustomerGUID() string  { return lc.configObj.CustomerGUID }
 func (lc *LocalConfig) GetClusterName() string   { return "" }
@@ -255,6 +257,7 @@ func NewClusterConfig(k8s *k8sinterface.KubernetesApi, backendAPI getter.IBacken
 	return c
 }
 
+func (c *ClusterConfig) GetRegistryConfig() RegistryConfig { return c.configObj.RegistryConfig }
 func (c *ClusterConfig) GetConfigObj() *ConfigObj { return c.configObj }
 func (c *ClusterConfig) GetDefaultNS() string     { return c.defaultNS }
 func (c *ClusterConfig) GetCustomerGUID() string  { return c.configObj.CustomerGUID }

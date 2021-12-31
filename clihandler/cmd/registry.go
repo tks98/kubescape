@@ -15,9 +15,15 @@ var registryCmd = &cobra.Command{
 			fmt.Println(fmt.Errorf("the registry command requires 1 or more arguments"))
 			os.Exit(1)
 		}
-		
+
 		if args[0] == "login" {
 			err := loginCmd.RunE(cmd, args)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+		} else if args[0] == "scan" {
+			err := registryScanCmd.RunE(cmd, args)
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
