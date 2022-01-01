@@ -8,7 +8,7 @@ import (
 )
 
 var loginCmd = &cobra.Command{
-	Use:   "login <registryName> <registryUrl> <username> <password",
+	Use:   "login --name=<registryName> --url=<registryUrl> --username=<username> --password=<password>",
 	Short: "Log into the image registry source",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -32,7 +32,7 @@ var loginCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("problem setting registry name %s\n", err)
 		}
-		fmt.Printf("Saved Harbor Login Credentials to %s", cautils.ConfigFileFullPath())
+		fmt.Printf("Saved Harbor Login Credentials to %s", cautils.ConfigFileFullPath() )
 
 		return nil
 
