@@ -26,9 +26,9 @@ func ConfigFileFullPath() string { return getter.GetDefaultPath(configFileName +
 // ======================================================================================
 
 type RegistryConfig struct {
-	RegistryName string `json:"registryName"`
-	RegistryURL string            `json:"registryURL"`
-	Credentials map[string]string `json:"credentials"`
+	RegistryName string            `json:"registryName"`
+	RegistryURL  string            `json:"registryURL"`
+	Credentials  map[string]string `json:"credentials"`
 }
 
 type ConfigObj struct {
@@ -119,10 +119,10 @@ func NewLocalConfig(backendAPI getter.IBackend, customerGUID string) *LocalConfi
 }
 
 func (lc *LocalConfig) GetRegistryConfig() RegistryConfig { return lc.configObj.RegistryConfig }
-func (lc *LocalConfig) GetConfigObj() *ConfigObj { return lc.configObj }
-func (lc *LocalConfig) GetCustomerGUID() string  { return lc.configObj.CustomerGUID }
-func (lc *LocalConfig) GetClusterName() string   { return "" }
-func (lc *LocalConfig) IsConfigFound() bool      { return existsConfigFile() }
+func (lc *LocalConfig) GetConfigObj() *ConfigObj          { return lc.configObj }
+func (lc *LocalConfig) GetCustomerGUID() string           { return lc.configObj.CustomerGUID }
+func (lc *LocalConfig) GetClusterName() string            { return "" }
+func (lc *LocalConfig) IsConfigFound() bool               { return existsConfigFile() }
 func (lc *LocalConfig) SetTenant() error {
 	// ARMO tenant GUID
 	if err := getTenantConfigFromBE(lc.backendAPI, lc.configObj); err != nil {
@@ -258,9 +258,9 @@ func NewClusterConfig(k8s *k8sinterface.KubernetesApi, backendAPI getter.IBacken
 }
 
 func (c *ClusterConfig) GetRegistryConfig() RegistryConfig { return c.configObj.RegistryConfig }
-func (c *ClusterConfig) GetConfigObj() *ConfigObj { return c.configObj }
-func (c *ClusterConfig) GetDefaultNS() string     { return c.defaultNS }
-func (c *ClusterConfig) GetCustomerGUID() string  { return c.configObj.CustomerGUID }
+func (c *ClusterConfig) GetConfigObj() *ConfigObj          { return c.configObj }
+func (c *ClusterConfig) GetDefaultNS() string              { return c.defaultNS }
+func (c *ClusterConfig) GetCustomerGUID() string           { return c.configObj.CustomerGUID }
 func (c *ClusterConfig) IsConfigFound() bool {
 	return existsConfigFile() || existsConfigMap(c.k8s, c.defaultNS)
 }

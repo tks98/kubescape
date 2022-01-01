@@ -14,11 +14,9 @@ var registryScanCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		if len(args) != 2 {
-			return fmt.Errorf("the registry scan command requires a URL to the registry image")
+		if registryInfo.Image == "" && !registryInfo.All {
+			return fmt.Errorf("the registry scan command requires a URL to the registry image (--image=<imageURL>) or the --all flag to scan all images")
 		}
-
-		imageURL := args[1]
 
 		// check that the registry login credentials are in the config
 		localConfig := cautils.NewLocalConfig(getter.GetArmoAPIConnector(), scanInfo.Account)
@@ -27,22 +25,25 @@ var registryScanCmd = &cobra.Command{
 			return fmt.Errorf("no registry information found. You must run kubescape registry login to authenticate with the registry")
 		}
 
+		// handle a harbor registry scan request depending on if it was a scan all request, or a single image scan
 		if registryConfig.RegistryName == "harbor" {
 			harborRegistry, err := harbor.NewHarborRegistry(registryConfig.RegistryURL, registryConfig.Credentials["username"], registryConfig.Credentials["password"])
 			if err != nil {
 				return err
 			}
 
-			if imageURL == "all" {
+			if registryInfo.All {
+				fmt.Println("Scanning all")
 				result, err := harborRegistry.ScanAll()
 				if err != nil {
 					return err
 				}
 
 				fmt.Println(result)
+				return nil
 			}
 
-			result, err := harborRegistry.ScanImage(imageURL)
+			result, err := harborRegistry.ScanImage(registryInfo.Image)
 			if err != nil {
 				return err
 			}

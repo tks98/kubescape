@@ -17,6 +17,7 @@ var loginCmd = &cobra.Command{
 			return fmt.Errorf("the registry login command requires a name, URL, username, and password")
 		}
 
+		// update the local json config with the supplied registry information
 		localConfig := cautils.NewLocalConfig(getter.GetArmoAPIConnector(), scanInfo.Account)
 		credentials := make(map[string]string)
 		credentials["username"] = args[3]
