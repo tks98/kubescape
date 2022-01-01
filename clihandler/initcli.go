@@ -178,7 +178,7 @@ func askUserForHostSensor() bool {
 		if ssss.Mode().Type()&(fs.ModeDevice|fs.ModeCharDevice) > 0 { //has TTY
 			fmt.Printf("Would you like to scan K8s nodes? [y/N]. This is required to collect valuable data for certain controls\n")
 			fmt.Printf("Use --enable-host-scan flag to suppress this message\n")
-			var b []byte = make([]byte, 1)
+			var b = make([]byte, 1)
 			if n, err := os.Stdin.Read(b); err == nil {
 				if n > 0 && len(b) > 0 && (b[0] == 'y' || b[0] == 'Y') {
 					return true

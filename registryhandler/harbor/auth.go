@@ -16,37 +16,28 @@ type harborRegistry struct {
 }
 
 // NewHarborRegistry returns a pointer to the harborRegistry type which can be used to perform actions on the registry
-func NewHarborRegistry(rawURL, username, password string) (*harborRegistry, error) {
+func NewHarborRegistry(rawURL string, credentials map[string]string) (*harborRegistry, error) {
 
 	registryURL, err := url.Parse(rawURL)
 	if err != nil {
 		return nil, err
 	}
 
-	c := &gc.ClientSetConfig{
-		URL:      registryURL.String(),
-		Username: username,
-		Password: password,
-	}
+	var hr harborRegistry
 
-	harborClient, err := gc.NewClientSet(c)
+	err = hr.Login(registryURL.String(), credentials)
 	if err != nil {
 		return nil, err
 	}
 
-	var hr harborRegistry
-
 	hr.url = *registryURL
-	hr.username = username
-	hr.password = password
-	hr.client = harborClient
 
 	return &hr, nil
 
 }
 
 // Login verifies the user supplied a valid registry and login credentials and stores those in the local config
-func (h harborRegistry) Login(registry string, credentials map[string]string, insecure bool) error {
+func (h *harborRegistry) Login(registry string, credentials map[string]string) error {
 
 	if _, ok := credentials["username"]; !ok {
 		return fmt.Errorf("you need to supply a username to login to the registry")
@@ -58,7 +49,6 @@ func (h harborRegistry) Login(registry string, credentials map[string]string, in
 
 	c := &gc.ClientSetConfig{
 		URL:      registry,
-		Insecure: insecure,
 		Username: credentials["username"],
 		Password: credentials["password"],
 	}
@@ -73,6 +63,9 @@ func (h harborRegistry) Login(registry string, credentials map[string]string, in
 		return err
 	}
 
+	h.client = harborClient
+	h.username = credentials["username"]
+	h.password = credentials["password"]
 	h.client = harborClient
 
 	return nil

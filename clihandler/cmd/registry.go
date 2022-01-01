@@ -37,6 +37,10 @@ var registryCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(registryCmd)
-	registryCmd.PersistentFlags().StringVarP(&registryInfo.Image, "image", "i", "", "The image URL to be scanned")
-	registryCmd.PersistentFlags().BoolVarP(&registryInfo.All, "all", "a", false, "Scans all of the images in the image registry")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.Image, "image", "", "", "The image URL to be scanned")
+	registryCmd.PersistentFlags().BoolVarP(&registryInfo.All, "all", "", false, "Scans all of the images in the image registry")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.Name, "name", "", "", "Specify the name of the registry to authenticate with")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.Username, "username", "u", "", "Username to log into the registry")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.Password, "password", "p", "", "Password to log into the registry")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.URL, "url", "", "", "URL of the registry to log into")
 }

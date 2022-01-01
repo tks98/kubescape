@@ -26,8 +26,8 @@ var registryScanCmd = &cobra.Command{
 		}
 
 		// handle a harbor registry scan request depending on if it was a scan all request, or a single image scan
-		if registryConfig.RegistryName == "harbor" {
-			harborRegistry, err := harbor.NewHarborRegistry(registryConfig.RegistryURL, registryConfig.Credentials["username"], registryConfig.Credentials["password"])
+		if registryConfig.RegistryName == cautils.Harbor.String() {
+			harborRegistry, err := harbor.NewHarborRegistry(registryConfig.RegistryURL, registryConfig.Credentials)
 			if err != nil {
 				return err
 			}
