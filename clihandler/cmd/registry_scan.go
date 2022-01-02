@@ -21,7 +21,7 @@ var registryScanCmd = &cobra.Command{
 		// check that the registry login credentials are in the config
 		localConfig := cautils.NewLocalConfig(getter.GetArmoAPIConnector(), scanInfo.Account)
 		registryConfig := localConfig.GetRegistryConfig()
-		if registryConfig.RegistryName == "" || registryConfig.RegistryURL == "" || registryConfig.Credentials == nil {
+		if registryConfig.RegistryName == "" || registryConfig.RegistryURL == "" {
 			return fmt.Errorf("no registry information found. You must run kubescape registry login to authenticate with the registry")
 		}
 

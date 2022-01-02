@@ -43,4 +43,5 @@ func init() {
 	registryCmd.PersistentFlags().StringVarP(&registryInfo.Username, "username", "u", "", "Username to log into the registry")
 	registryCmd.PersistentFlags().StringVarP(&registryInfo.Password, "password", "p", "", "Password to log into the registry")
 	registryCmd.PersistentFlags().StringVarP(&registryInfo.URL, "url", "", "", "URL of the registry to log into")
+	registryCmd.PersistentFlags().StringVarP(&registryInfo.AuthType, "authType", "", "", "Type of authentication to use to login to the registry")
 }

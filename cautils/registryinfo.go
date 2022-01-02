@@ -22,4 +22,5 @@ type RegistryInfo struct {
 	Username string // Username to login to the registry
 	Password string // Password to login to the registry
 	Name     string // Name of the registry
+	AuthType string // The type of authentication to use to log into the registry
 }

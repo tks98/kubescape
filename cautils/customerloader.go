@@ -4,10 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"strings"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/armosec/k8s-interface/k8sinterface"
 	"github.com/armosec/kubescape/cautils/getter"
@@ -26,9 +25,9 @@ func ConfigFileFullPath() string { return getter.GetDefaultPath(configFileName +
 // ======================================================================================
 
 type RegistryConfig struct {
-	RegistryName string            `json:"registryName"`
-	RegistryURL  string            `json:"registryURL"`
-	Credentials  map[string]string `json:"credentials"`
+	RegistryName string                            `json:"registryName"`
+	RegistryURL  string                            `json:"registryURL"`
+	Credentials  ContainerImageRegistryCredentials `json:"credentials"`
 }
 
 type ConfigObj struct {
@@ -67,7 +66,7 @@ type ITenantConfig interface {
 	// set
 	SetTenant() error
 	SetRegistryURL(string) error
-	SetRegistryCredentials(map[string]string) error
+	SetRegistryCredentials(credentials ContainerImageRegistryCredentials) error
 	SetRegistryName(string) error
 
 	// getters
@@ -153,7 +152,7 @@ func (lc *LocalConfig) SetRegistryName(name string) error {
 	return nil
 }
 
-func (lc *LocalConfig) SetRegistryCredentials(credentials map[string]string) error {
+func (lc *LocalConfig) SetRegistryCredentials(credentials ContainerImageRegistryCredentials) error {
 	err := SetRegistryCredentials(lc.configObj, credentials)
 	if err != nil {
 		return err
@@ -202,7 +201,7 @@ func (c *ClusterConfig) SetRegistryURL(url string) error {
 	return nil
 }
 
-func (c *ClusterConfig) SetRegistryCredentials(credentials map[string]string) error {
+func (c *ClusterConfig) SetRegistryCredentials(credentials ContainerImageRegistryCredentials) error {
 	err := SetRegistryCredentials(c.configObj, credentials)
 	if err != nil {
 		return err
@@ -502,12 +501,12 @@ func AdoptClusterName(clusterName string) string {
 	return strings.ReplaceAll(clusterName, "/", "-")
 }
 
-func SetRegistryCredentials(c *ConfigObj, credentials map[string]string) error {
-	if _, ok := credentials["username"]; !ok {
+func SetRegistryCredentials(c *ConfigObj, credentials ContainerImageRegistryCredentials) error {
+	if _, ok := credentials.BasicAuth["username"]; !ok {
 		return fmt.Errorf("you need to supply a username to login to the registry")
 	}
 
-	if _, ok := credentials["password"]; !ok {
+	if _, ok := credentials.BasicAuth["password"]; !ok {
 		return fmt.Errorf("you need to supply a password to login to the registry")
 	}
 

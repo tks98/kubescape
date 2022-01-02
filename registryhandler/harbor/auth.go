@@ -3,6 +3,7 @@ package harbor
 import (
 	"context"
 	"fmt"
+	"github.com/armosec/kubescape/cautils"
 	gc "github.com/goharbor/go-client/pkg/harbor"
 	"github.com/goharbor/go-client/pkg/sdk/v2.0/client/health"
 	"net/url"
@@ -16,7 +17,7 @@ type harborRegistry struct {
 }
 
 // NewHarborRegistry returns a pointer to the harborRegistry type which can be used to perform actions on the registry
-func NewHarborRegistry(rawURL string, credentials map[string]string) (*harborRegistry, error) {
+func NewHarborRegistry(rawURL string, credentials cautils.ContainerImageRegistryCredentials) (*harborRegistry, error) {
 
 	registryURL, err := url.Parse(rawURL)
 	if err != nil {
@@ -25,7 +26,7 @@ func NewHarborRegistry(rawURL string, credentials map[string]string) (*harborReg
 
 	var hr harborRegistry
 
-	err = hr.Login(registryURL.String(), credentials)
+	err = hr.Login(registryURL.String(), credentials.BasicAuth)
 	if err != nil {
 		return nil, err
 	}
