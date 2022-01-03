@@ -2,6 +2,7 @@ package harbor
 
 import (
 	"context"
+	"github.com/armosec/kubescape/cautils"
 	health2 "github.com/goharbor/go-client/pkg/sdk/v2.0/client/health"
 	project2 "github.com/goharbor/go-client/pkg/sdk/v2.0/client/project"
 	"testing"
@@ -10,7 +11,12 @@ import (
 // TestLogin tests the logic for authenticating with harbor
 func TestLogin(t *testing.T) {
 
-	harbor, err := NewHarborRegistry("http://127.0.0.1:8443", "admin", "Harbor12345")
+	var credentials cautils.ContainerImageRegistryCredentials
+	credentials.BasicAuth = make(map[string]string)
+	credentials.BasicAuth["username"] = "admin"
+	credentials.BasicAuth["password"] = "Harbor12345"
+
+	harbor, err := NewHarborRegistry("http://127.0.0.1:8443", credentials)
 	if err != nil {
 		t.Fatal(err)
 	}

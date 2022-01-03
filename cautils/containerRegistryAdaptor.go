@@ -10,6 +10,7 @@ type ContainerImageRegistryCredentials struct {
 }
 
 type ContainerImageIdentifier struct {
+	Project string
 	Registry   string
 	Repository string
 	Tag        string
