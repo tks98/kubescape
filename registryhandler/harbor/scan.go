@@ -10,7 +10,7 @@ import (
 // ScanImage sends a scan request for the specified image
 func (h harborRegistry) ScanImage(imageURL string) (*scan.ScanArtifactAccepted, error) {
 
-	projectName, repositoryName, reference, err := h.ParseImageURL(imageURL)
+	projectName, repositoryName, reference, _, _, err := h.ParseImageURL(imageURL)
 	if err != nil {
 		return nil, err
 	}

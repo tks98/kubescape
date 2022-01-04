@@ -31,6 +31,12 @@ var registryCmd = &cobra.Command{
 				fmt.Println(err)
 				os.Exit(1)
 			}
+		} else if args[0] == "scan-status" {
+			err := imageScanStatusCmd.RunE(cmd, args)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
 		}
 	},
 }
